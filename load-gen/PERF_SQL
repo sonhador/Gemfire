@@ -1,0 +1,2 @@
+connect client 'localhost:1527';
+SELECT count(*) FROM app.data;

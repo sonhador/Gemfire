@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+ 
+<configuration>
+    <environments default="development">
+        <environment id="development">
+          <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.pivotal.gemfirexd.jdbc.ClientDriver"/>
+                <property name="url" value="jdbc:gemfirexd://10.35.107.13:1527/"/>
+                <property name="username" value="gpadmin"/>
+                <property name="password" value="password"/>
+            </dataSource>
+       </environment>
+    </environments> 
+    
+    <mappers>
+			<mapper url="file:///Users/jungm3/Documents/Dev/Java/Data/load-gen/sqlMapper.xml"/>
+    </mappers>
+</configuration>
