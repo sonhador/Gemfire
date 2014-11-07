@@ -45,7 +45,7 @@ Version
 
 TODO
 ----
-1. provide 'select options' for various JDBC drivers.
+1. provide support for various JDBC drivers.
 
 Credit
 ----
