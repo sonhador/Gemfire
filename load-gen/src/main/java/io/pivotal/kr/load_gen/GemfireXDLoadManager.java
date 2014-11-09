@@ -61,17 +61,22 @@ public class GemfireXDLoadManager {
 	}
 	
 	private class StatPrinter extends TimerTask {
+		private boolean finished = false;
 		public void run() {
 			while (true) {
 				System.out.println(String.format("Lines: %010d", LoadStat.getInstance().getCount()));
+				
+				if (finished) {
+					System.out.println("Load Complete !!");
+					break;
+				}
 				
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {}
 				
 				if (threadCnt.get() == 0) {
-					System.out.println("Load Complete !!");
-					break;
+					finished = true;
 				} else {
 					System.out.println(threadCnt.get() + " threads remaining..");
 				}
