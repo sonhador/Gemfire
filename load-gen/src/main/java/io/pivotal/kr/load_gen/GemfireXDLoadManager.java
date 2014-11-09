@@ -67,7 +67,7 @@ public class GemfireXDLoadManager {
 				System.out.println(String.format("Lines: %010d", LoadStat.getInstance().getCount()));
 				
 				if (finished) {
-					System.out.println("Load Complete !!");
+					System.out.println("Complete !!");
 					break;
 				}
 				
