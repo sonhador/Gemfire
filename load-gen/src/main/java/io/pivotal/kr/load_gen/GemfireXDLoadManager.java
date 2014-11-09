@@ -75,10 +75,10 @@ public class GemfireXDLoadManager {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {}
 				
+				System.out.println(threadCnt.get() + " threads remaining..");
+
 				if (threadCnt.get() == 0) {
 					finished = true;
-				} else {
-					System.out.println(threadCnt.get() + " threads remaining..");
 				}
 			}
 		}
