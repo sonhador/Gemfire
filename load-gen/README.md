@@ -27,7 +27,7 @@ d) run, java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar "data
 
 What It Does
 ----
-a) Reads and analyzes files in 'localDir' to partition read-points. The number of paritions will equal to 'numberOfThreads', and threads will be alloted to each file in proportion to their file-size.
+a) Reads and analyzes files in 'localDir' to partition read-points. The number of partitions will equal to 'numberOfThreads', and threads will be alloted to each file in proportion to their file-size.
 
 b) For each partition will be created a thread for read and load-generation.
 
