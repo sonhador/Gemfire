@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionManager;
 
@@ -44,7 +43,7 @@ public class GemfireXDClient {
 	}
 
 	public SqlSession getSession() throws FileNotFoundException {
-		return sqlSessionManager.openSession(ExecutorType.BATCH, false);
+		return sqlSessionManager.openSession(true);
 	}
 	
 	public void closeSession(SqlSession sqlSession) {
@@ -83,23 +82,21 @@ public class GemfireXDClient {
 		}
 		
 		if ("insert".equals(mode)) {
-			sqlSession.insert("insert", list);
-			sqlSession.commit();
+			for (Map<String, String> param : list) {
+				sqlSession.insert("insert", param);
+			}
 		} else if ("select".equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.selectOne("select", param);
 			}
-			sqlSession.flushStatements();
 		} else if ("update".equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.update("update", param);
 			}
-			sqlSession.commit();
 		} else if ("delete".equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.delete("delete", param);
 			}
-			sqlSession.commit();
 		}
 		
 		return true;
