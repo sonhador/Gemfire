@@ -67,7 +67,10 @@ public class GemfireXDLoadManager {
 				System.out.println(String.format("Lines: %010d", LoadStat.getInstance().getCount()));
 				
 				if (finished) {
+					LoadStat.getInstance().endMeasuringTime();
 					System.out.println("Complete !!");
+					System.out.println("Seconds: " + LoadStat.getInstance().getSecondsTook());
+					System.out.println("TPS: " + (LoadStat.getInstance().getCount() / LoadStat.getInstance().getSecondsTook()));
 					break;
 				}
 				

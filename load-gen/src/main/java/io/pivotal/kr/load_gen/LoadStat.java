@@ -31,8 +31,25 @@ public class LoadStat {
 	
 	private AtomicLong count;
 	
+	private long startTime = -1L;
+	private long endTime;
+	
 	private LoadStat() {
 		count = new AtomicLong(0);
+	}
+	
+	private void startMeasuringTime() {
+		if (startTime == -1L) {
+			startTime = System.currentTimeMillis();
+		}
+	}
+	
+	public void endMeasuringTime() {
+		endTime = System.currentTimeMillis();
+	}
+	
+	public long getSecondsTook() {
+		return (endTime - startTime) / 1000;
 	}
 	
 	public long getCount() {
@@ -40,10 +57,12 @@ public class LoadStat {
 	}
 	
 	public long increment(long amount) {
+		startMeasuringTime();
 		return count.addAndGet(amount);
 	}
 	
 	public long increment() {
+		startMeasuringTime();
 		return count.incrementAndGet();
 	}
 	
