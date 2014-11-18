@@ -5,7 +5,7 @@ Load-Gen is a load-generator that features parallel reads of data file(s).
 
 Usage
 ----
-java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar &lt;insert|select|update|delete&gt; &lt;localDir&gt; &lt;sqlMapConfigXMLPath&gt; &lt;delimiter&gt; &lt;numberOfThreads&gt;
+java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar &lt;batch|autocommit&gt; &lt;insert|select|update|delete&gt; &lt;localDir&gt; &lt;sqlMapConfigXMLPath&gt; &lt;delimiter&gt; &lt;numberOfThreads&gt;
 
 a) sqlMapConfigXMLPath: contains JDBC-url, account-info, and reference to sql-mapping file
 
@@ -23,7 +23,7 @@ b) run, mvn clean package
 
 c) edit ./sqlMapConfig.xml for GemfireXD JDBC url as well as account-info. modify ./sqlMapper.xml as well according to your GemfireXD table-schema.
 
-d) run, java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar insert ./data ./sqlMapConfig.xml "," 500
+d) run, java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar batch insert ./data ./sqlMapConfig.xml "," 500
 
 What It Does
 ----

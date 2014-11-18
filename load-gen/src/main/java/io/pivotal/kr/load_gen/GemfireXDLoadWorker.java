@@ -63,12 +63,7 @@ public class GemfireXDLoadWorker extends TimerTask {
 	public void run() {
 		SqlSession sqlSession = null;
 		try {
-			try {
-				sqlSession = gemfireXDClient.getSession();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return;
-			}
+			sqlSession = gemfireXDClient.getSession();
 			
 			new Thread(new Reader()).start();
 			

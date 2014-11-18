@@ -37,14 +37,22 @@ import org.apache.ibatis.session.SqlSessionManager;
 
 
 public class GemfireXDClient {
+	private String type;
 	private SqlSessionManager sqlSessionManager;
 	
-	public GemfireXDClient (String sqlMapConfigXMLPath) throws FileNotFoundException {
-		sqlSessionManager = SqlSessionManager.newInstance(new FileReader(new File(sqlMapConfigXMLPath)));
+	public GemfireXDClient (String type, String sqlMapConfigXMLPath) throws FileNotFoundException {
+		this.type = type;
+		this.sqlSessionManager = SqlSessionManager.newInstance(new FileReader(new File(sqlMapConfigXMLPath)));
 	}
 
-	public SqlSession getSession() throws FileNotFoundException {
-		return sqlSessionManager.openSession(ExecutorType.BATCH, false);
+	public SqlSession getSession() {
+		if (Args.batch.name().equals(type)) {
+			return sqlSessionManager.openSession(ExecutorType.BATCH, false);
+		} else if (Args.autocommit.name().equals(type)) {
+			return sqlSessionManager.openSession(true);
+		}
+		
+		throw new RuntimeException ("wrong type specified !! only, <batch|autocommit> allowed !!");
 	}
 	
 	public void closeSession(SqlSession sqlSession) {
@@ -82,26 +90,46 @@ public class GemfireXDClient {
 			return false;
 		}
 		
-		if ("insert".equals(mode)) {
-			sqlSession.insert("insert", list);
-			sqlSession.commit();
-		} else if ("select".equals(mode)) {
+		if (Args.insert.name().equals(mode)) {
+			if (Args.autocommit.name().equals(type)) {
+				for (Map<String, String> param : list) {
+					sqlSession.insert("insert", param);
+				}
+			} else if (Args.batch.name().equals(type)) {
+				sqlSession.insert("insert_batch", list);
+				commitAsRequired(sqlSession, false);
+			}
+		} else if (Args.select.name().equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.selectOne("select", param);
 			}
-			sqlSession.flushStatements();
-		} else if ("update".equals(mode)) {
+			commitAsRequired(sqlSession, true);
+		} else if (Args.update.name().equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.update("update", param);
 			}
-			sqlSession.commit();
-		} else if ("delete".equals(mode)) {
+			commitAsRequired(sqlSession, false);
+		} else if (Args.delete.name().equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.delete("delete", param);
 			}
-			sqlSession.commit();
+			commitAsRequired(sqlSession, false);
 		}
 		
 		return true;
+	}
+	
+	private void commitAsRequired(SqlSession sqlSession, boolean flushOnly) {
+		if (Args.autocommit.name().equals(type)) {
+			return;
+		}
+		
+		if (Args.batch.name().equals(type)) {
+			if (flushOnly) {
+				sqlSession.flushStatements();
+			} else {
+				sqlSession.commit();
+			}
+		}
 	}
 }

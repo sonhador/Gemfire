@@ -34,14 +34,14 @@ public class GemfireXDLoadManager {
 	
 	private AtomicInteger threadCnt;
 	
-	public GemfireXDLoadManager(String mode, String dataDir, String sqlMapConfigXMLPath, String delimiter, int numOfThreads) throws IOException {
+	public GemfireXDLoadManager(String type, String mode, String dataDir, String sqlMapConfigXMLPath, String delimiter, int numOfThreads) throws IOException {
 		ResourceReader resourceReader = new ResourceReader(dataDir, numOfThreads);
 		
 		threadCnt = new AtomicInteger(0);
 		
 		int threadId = 1;
 		for (ResourceDescriptor resource : resourceReader.getResourceDescriptors()) {
-			GemfireXDLoadWorker thread = new GemfireXDLoadWorker(this, threadId++, resource, delimiter, new GemfireXDClient(sqlMapConfigXMLPath), mode); 
+			GemfireXDLoadWorker thread = new GemfireXDLoadWorker(this, threadId++, resource, delimiter, new GemfireXDClient(type, sqlMapConfigXMLPath), mode); 
 			workers.add(thread);
 			
 			countUpWorkToDo();
