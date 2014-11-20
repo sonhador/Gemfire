@@ -62,10 +62,6 @@ public class GemfireXDClient {
 		}
 	}
 	
-	public void clearSessionCache() {
-		sqlSession.clearCache();
-	}
-	
 	private Map<String, String> delimitedStringToMap(String line, String delimiter) {
 		if (line.contains(delimiter) == false) {
 			return null;
@@ -110,7 +106,6 @@ public class GemfireXDClient {
 			for (Map<String, String> param : list) {
 				sqlSession.selectMap("select", param, "key");
 			}
-			clearSessionCache();
 		} else if (Args.update.name().equals(mode)) {
 			for (Map<String, String> param : list) {
 				sqlSession.update("update", param);

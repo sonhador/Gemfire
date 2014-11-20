@@ -15,7 +15,7 @@
 			(#{param.idx1}, #{param.idx2})
 		</foreach>
 	</insert>
-	<select id="select" parameterType="java.util.Map" resultType="java.util.Map">
+	<select id="select" parameterType="java.util.Map" resultType="java.util.Map" flushCache="true">
 			SELECT "key", "value" 
 			FROM app.data
 			WHERE "key" = #{idx1}
