@@ -104,7 +104,11 @@ public class GemfireXDClient {
 			}
 		} else if (Args.select.name().equals(mode)) {
 			for (Map<String, String> param : list) {
-				sqlSession.selectMap("select", param, "key");
+				List<Map<String, String>> rows = sqlSession.selectList("select", param);
+				
+				for (Map<String, String> row : rows) {
+//					System.out.println(row);
+				}
 			}
 		} else if (Args.update.name().equals(mode)) {
 			for (Map<String, String> param : list) {
