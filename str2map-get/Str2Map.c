@@ -104,11 +104,11 @@ Datum get(PG_FUNCTION_ARGS) {
 }
 
 void free_palloc(char *p) {
-    if (p == CHAR_NULL) {
-        return;
-    }
+	if (p == CHAR_NULL) {
+		return;
+	}
 
-    pfree(p);
+	pfree(p);
 }
 
 void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_delim) {
