@@ -94,7 +94,7 @@ Datum get(PG_FUNCTION_ARGS) {
         	val = char_p2txt(val_part, val_part_end - key_val_pairs_delim_len - val_part + 1);
 	}
 
-    cleanup(body, key, key_val_pairs_delim, key_val_delim);
+	cleanup(body, key, key_val_pairs_delim, key_val_delim);
 
 	if (val == TEXT_NULL) {
 		PG_RETURN_NULL();
