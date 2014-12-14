@@ -44,32 +44,32 @@ char *txt2char_p(text *str);
 text *char_p2txt(char *str, int len);
 
 Datum get(PG_FUNCTION_ARGS) {
-	char *body 					= txt2char_p(PG_GETARG_TEXT_P(0));
- 	char *key 					= txt2char_p(PG_GETARG_TEXT_P(1));
+	char *body 			= txt2char_p(PG_GETARG_TEXT_P(0));
+ 	char *key 			= txt2char_p(PG_GETARG_TEXT_P(1));
   	char *key_val_pairs_delim 	= txt2char_p(PG_GETARG_TEXT_P(2));
 	char *key_val_delim 		= txt2char_p(PG_GETARG_TEXT_P(3));
 	char *key_part;
 	char *val_part;
 	char *val_part_end;
-    int key_val_pairs_delim_len = strlen(key_val_pairs_delim);
-    int key_len = strlen(key);
-    int key_val_delim_len = strlen(key_val_delim);
+	int key_val_pairs_delim_len = strlen(key_val_pairs_delim);
+	int key_len = strlen(key);
+	int key_val_delim_len = strlen(key_val_delim);
 	char key_delim[key_len + key_val_delim_len + 1];
 	char delim_key_delim[key_val_pairs_delim_len + key_len + key_val_delim_len + 1];
 
-	if (body 				== CHAR_NULL ||
-		key  				== CHAR_NULL ||
-		key_val_pairs_delim == CHAR_NULL ||
+	if (body 			== CHAR_NULL ||
+		key  			== CHAR_NULL ||
+		key_val_pairs_delim 	== CHAR_NULL ||
 		key_val_delim		== CHAR_NULL ) {
-        cleanup(body, key, key_val_pairs_delim, key_val_delim);
-        PG_RETURN_NULL();
-    }
+		cleanup(body, key, key_val_pairs_delim, key_val_delim);
+		PG_RETURN_NULL();
+	}
 
 	concat(key_delim, 0, key, key_len);
 	concat(key_delim, key_len, key_val_delim, key_val_delim_len);
 
 	concat(delim_key_delim, 0, key_val_pairs_delim, key_val_pairs_delim_len);
-    concat(delim_key_delim, key_val_pairs_delim_len, key_delim, key_len + key_val_delim_len);
+	concat(delim_key_delim, key_val_pairs_delim_len, key_delim, key_len + key_val_delim_len);
 
 	key_part = strstr(body, key_delim);
 
@@ -77,7 +77,7 @@ Datum get(PG_FUNCTION_ARGS) {
 		key_part = strstr(body, delim_key_delim);
 
 		if (!key_part) {
-            cleanup(body, key, key_val_pairs_delim, key_val_delim);
+			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
 
@@ -87,11 +87,11 @@ Datum get(PG_FUNCTION_ARGS) {
 	val_part = key_part + key_len + key_val_delim_len;
 	val_part_end = strstr(val_part, key_val_pairs_delim);
 
-    text *val;
+	text *val;
 	if (!val_part_end) {
-        val = char_p2txt(val_part, body + strlen(body) - val_part);
+        	val = char_p2txt(val_part, body + strlen(body) - val_part);
 	} else {
-        val = char_p2txt(val_part, val_part_end - key_val_pairs_delim_len - val_part + 1);
+        	val = char_p2txt(val_part, val_part_end - key_val_pairs_delim_len - val_part + 1);
 	}
 
     cleanup(body, key, key_val_pairs_delim, key_val_delim);
@@ -99,7 +99,7 @@ Datum get(PG_FUNCTION_ARGS) {
 	if (val == TEXT_NULL) {
 		PG_RETURN_NULL();
 	} else {
-	    PG_RETURN_TEXT_P(val);
+		PG_RETURN_TEXT_P(val);
 	}
 }
 
@@ -112,10 +112,10 @@ void free_palloc(char *p) {
 }
 
 void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_delim) {
-    free_palloc(body);
-    free_palloc(key);
-    free_palloc(key_val_pairs_delim);
-    free_palloc(key_val_delim);
+	free_palloc(body);
+	free_palloc(key);
+	free_palloc(key_val_pairs_delim);
+	free_palloc(key_val_delim);
 }
 
 char *concat(char *dst, int dst_len, char *src, int src_len) {
@@ -130,13 +130,13 @@ char *txt2char_p(text *str) {
 		return CHAR_NULL;
 	}
 
-    size_t len = VARSIZE(str) - VARHDRSZ;
+	size_t len = VARSIZE(str) - VARHDRSZ;
 
-    char *char_p = palloc(len + 1);
-    memcpy(char_p, VARDATA(str), len);
-    char_p[len] = 0;
+	char *char_p = palloc(len + 1);
+	memcpy(char_p, VARDATA(str), len);
+	char_p[len] = 0;
 
-    return char_p;
+	return char_p;
 }
 
 text *char_p2txt(char *str, int len) {
@@ -149,5 +149,5 @@ text *char_p2txt(char *str, int len) {
 	SET_VARSIZE(txt, len + VARHDRSZ);
 	memcpy(VARDATA(txt), str, len);
 
-    return txt;
+	return txt;
 }
