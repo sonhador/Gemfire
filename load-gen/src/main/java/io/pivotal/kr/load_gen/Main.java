@@ -54,24 +54,26 @@ public class Main
 	
     public static void main( String[] args ) throws IOException
     {
-    	if (args.length != 5) {
-    		System.err.println("Correct usage: java -jar load-gen.jar <insert|select|update|delete> <dataDir> <sqlMapConfigXMLPath> <delimiter> <numberOfThreads>");
+    	if (args.length != 6) {
+    		System.err.println("Correct usage: java -jar load-gen.jar <batch|autocommit> <insert|select|update|delete> <dataDir> <sqlMapConfigXMLPath> <delimiter> <numberOfThreads>");
     		
     		System.exit(-1);
     	}
     	
-    	String mode = args[0];
-    	String dataDir = args[1];
-    	String sqlMapConfigXMLPath = args[2];
-    	String delimiter = args[3];
-    	String numberOfThreads = args[4];
+    	String type = args[0];
+    	String mode = args[1];
+    	String dataDir = args[2];
+    	String sqlMapConfigXMLPath = args[3];
+    	String delimiter = args[4];
+    	String numberOfThreads = args[5];
     	
-    	if (StringUtils.isEmpty(mode) ||
+    	if (StringUtils.isEmpty(type) ||
+    		StringUtils.isEmpty(mode) ||
     		StringUtils.isEmpty(dataDir) || 
     		StringUtils.isEmpty(sqlMapConfigXMLPath) ||
     		StringUtils.isEmpty(delimiter) ||
     		StringUtils.isEmpty(numberOfThreads)) {
-    		System.err.println("Correct usage: java -jar load-gen.jar <insert|select|update|delete> <dataDir> <sqlMapConfigXMLPath> <delimiter> <numberOfThreads>");
+    		System.err.println("Correct usage: java -jar load-gen.jar <batch|autocommit> <insert|select|update|delete> <dataDir> <sqlMapConfigXMLPath> <delimiter> <numberOfThreads>");
     		
     		System.exit(-1);
     	}
@@ -80,6 +82,6 @@ public class Main
     	sqlMapConfigXMLPath = stripSurroundingQuotes(sqlMapConfigXMLPath);
     	delimiter = stripSurroundingQuotes(delimiter);
     	
-    	new GemfireXDLoadManager(mode, dataDir, sqlMapConfigXMLPath, delimiter, Integer.parseInt(numberOfThreads));
+    	new GemfireXDLoadManager(type, mode, dataDir, sqlMapConfigXMLPath, delimiter, Integer.parseInt(numberOfThreads));
     }
 }

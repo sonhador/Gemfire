@@ -30,8 +30,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.ibatis.session.SqlSession;
-
 public class GemfireXDLoadWorker extends TimerTask {
 	private ResourceDescriptor resource;
 	private String delimiter;
@@ -61,14 +59,8 @@ public class GemfireXDLoadWorker extends TimerTask {
 	}
 	
 	public void run() {
-		SqlSession sqlSession = null;
 		try {
-			try {
-				sqlSession = gemfireXDClient.getSession();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return;
-			}
+			gemfireXDClient.establishSession();
 			
 			new Thread(new Reader()).start();
 			
@@ -82,16 +74,13 @@ public class GemfireXDLoadWorker extends TimerTask {
 					break;
 				}
 				
-				if (gemfireXDClient.crud(mode, sqlSession, data, delimiter)) {	
+				if (gemfireXDClient.crud(mode, data, delimiter)) {	
 					LoadStat.getInstance().increment(data.length);
 				}
 			}
 		} finally {
 			manager.countDownWorkDone();
-			
-			if (sqlSession != null) {
-				gemfireXDClient.closeSession(sqlSession);
-			}
+			gemfireXDClient.closeSession();
 		}
 	}
 	

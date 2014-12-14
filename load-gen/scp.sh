@@ -26,37 +26,108 @@
 PWD="changeme"
 
 expect <<EOD
-spawn scp target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar root@10.35.106.69:/root/load-gen/.
+spawn scp target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar gpadmin@10.35.106.69:/home/gpadmin/GemfireXD/load-gen/.
 expect "password"
 send "$PWD\n"
+expect eof
 
-sleep 1
-
-spawn scp target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar root@10.35.106.166:/root/load-gen/.
+spawn scp target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar gpadmin@10.35.106.166:/home/gpadmin/GemfireXD/load-gen/.
 expect "password"
 send "$PWD\n"
+expect eof
 
-sleep 1
-
-spawn scp target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar root@10.35.106.167:/root/load-gen/.
+spawn scp target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar gpadmin@10.35.106.167:/home/gpadmin/GemfireXD/load-gen/.
 expect "password"
 send "$PWD\n"
+expect eof
 
-sleep 1
-
-spawn scp sqlMapper.xml root@10.35.106.69:/root/load-gen/.
+spawn scp sqlMapper.xml gpadmin@10.35.106.69:/home/gpadmin/GemfireXD/load-gen/.
 expect "password"
 send "$PWD\n"
+expect eof
 
-sleep 1
-
-spawn scp sqlMapper.xml root@10.35.106.166:/root/load-gen/.
+spawn scp sqlMapper.xml gpadmin@10.35.106.166:/home/gpadmin/GemfireXD/load-gen/.
 expect "password"
 send "$PWD\n"
+expect eof
 
-sleep 1
-
-spawn scp sqlMapper.xml root@10.35.106.167:/root/load-gen/.
+spawn scp sqlMapper.xml gpadmin@10.35.106.167:/home/gpadmin/GemfireXD/load-gen/.
 expect "password"
 send "$PWD\n"
+expect eof
+
+spawn scp sqlMapConfig.xml gpadmin@10.35.106.69:/home/gpadmin/GemfireXD/load-gen/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp sqlMapConfig.xml gpadmin@10.35.106.166:/home/gpadmin/GemfireXD/load-gen/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp sqlMapConfig.xml gpadmin@10.35.106.167:/home/gpadmin/GemfireXD/load-gen/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp JAVA_ARGS gpadmin@10.35.106.69:/home/gpadmin/GemfireXD/load-gen/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp JAVA_ARGS gpadmin@10.35.106.166:/home/gpadmin/GemfireXD/load-gen/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp JAVA_ARGS gpadmin@10.35.106.167:/home/gpadmin/GemfireXD/load-gen/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp perf_check.sh gpadmin@10.35.106.70:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp perf_check.sh gpadmin@10.35.106.71:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp perf_check.sh gpadmin@10.35.106.165:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp perf_check.pl gpadmin@10.35.106.70:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp perf_check.pl gpadmin@10.35.106.71:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp perf_check.pl gpadmin@10.35.106.165:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp PERF_SQL gpadmin@10.35.106.70:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp PERF_SQL gpadmin@10.35.106.71:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
+
+spawn scp PERF_SQL gpadmin@10.35.106.165:/home/gpadmin/GemfireXD/.
+expect "password"
+send "$PWD\n"
+expect eof
 EOD

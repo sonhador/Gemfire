@@ -9,7 +9,7 @@
           <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.pivotal.gemfirexd.jdbc.ClientDriver"/>
-                <property name="url" value="jdbc:gemfirexd://10.35.107.13:1527/"/>
+                <property name="url" value="jdbc:gemfirexd://172.28.8.251:1527/"/>
                 <property name="username" value="gpadmin"/>
                 <property name="password" value="password"/>
             </dataSource>
@@ -17,6 +17,6 @@
     </environments> 
     
     <mappers>
-			<mapper url="file:///Users/jungm3/Documents/Dev/Java/Data/load-gen/sqlMapper.xml"/>
+			<mapper url="file:///home/gpadmin/GemfireXD/load-gen/sqlMapper.xml"/>
     </mappers>
 </configuration>

@@ -5,7 +5,7 @@ Load-Gen is a load-generator that features parallel reads of data file(s).
 
 Usage
 ----
-java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar localDir sqlMapConfigXMLPath delimiter numberOfThreads
+java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar &lt;batch|autocommit&gt; &lt;insert|select|update|delete&gt; &lt;localDir&gt; &lt;sqlMapConfigXMLPath&gt; &lt;delimiter&gt; &lt;numberOfThreads&gt;
 
 a) sqlMapConfigXMLPath: contains JDBC-url, account-info, and reference to sql-mapping file
 
@@ -21,17 +21,17 @@ a) from the project directory where pom.xml can be found,
 
 b) run, mvn clean package
 
-c) edit ./sqlMapConfig.xml for GemfireXD JDBC url as well as account-info. modify ./sqlMapper.xml as well according to your GemfireXD table-schema. 
+c) edit ./sqlMapConfig.xml for GemfireXD JDBC url as well as account-info. modify ./sqlMapper.xml as well according to your GemfireXD table-schema.
 
-d) run, java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar "data" "./sqlMapConfig.xml" "," 500
+d) run, java -jar target/load-gen-0.0.1-SNAPSHOT-jar-with-dependencies.jar batch insert ./data ./sqlMapConfig.xml "," 500
 
 What It Does
 ----
-a) Reads and analyzes files in 'localDir' to partition read-points. The number of paritions will equal to 'numberOfThreads', and threads will be alloted to each file in proportion to their file-size.
+a) Reads and analyzes files in 'localDir' to partition read-points. The number of partitions will equal to 'numberOfThreads', and threads will be alloted to each file in proportion to their file-size.
 
 b) For each partition will be created a thread for read and load-generation.
 
-c) Uses GemfireXD JDBC sessions to load 'insert' requests to the designated GemfireXD Cluster.
+c) Uses GemfireXD JDBC sessions to load 'insert|select|update|delete' requests to the designated GemfireXD Cluster.
 
 Build
 ----

@@ -23,4 +23,4 @@
 #*******************************************************************************
 #!/bin/sh
 
-gfxd run -file=./PERF_SQL | grep -A2 "-" | grep -P "\d+"
+./Pivotal_GemFireXD_130/bin/gfxd run -file=./PERF_SQL | grep -A2 "-" | grep -P "\d+"

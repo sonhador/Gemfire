@@ -34,14 +34,14 @@ public class GemfireXDLoadManager {
 	
 	private AtomicInteger threadCnt;
 	
-	public GemfireXDLoadManager(String mode, String dataDir, String sqlMapConfigXMLPath, String delimiter, int numOfThreads) throws IOException {
+	public GemfireXDLoadManager(String type, String mode, String dataDir, String sqlMapConfigXMLPath, String delimiter, int numOfThreads) throws IOException {
 		ResourceReader resourceReader = new ResourceReader(dataDir, numOfThreads);
 		
 		threadCnt = new AtomicInteger(0);
 		
 		int threadId = 1;
 		for (ResourceDescriptor resource : resourceReader.getResourceDescriptors()) {
-			GemfireXDLoadWorker thread = new GemfireXDLoadWorker(this, threadId++, resource, delimiter, new GemfireXDClient(sqlMapConfigXMLPath), mode); 
+			GemfireXDLoadWorker thread = new GemfireXDLoadWorker(this, threadId++, resource, delimiter, new GemfireXDClient(type, sqlMapConfigXMLPath), mode); 
 			workers.add(thread);
 			
 			countUpWorkToDo();
@@ -61,19 +61,27 @@ public class GemfireXDLoadManager {
 	}
 	
 	private class StatPrinter extends TimerTask {
+		private boolean finished = false;
 		public void run() {
 			while (true) {
 				System.out.println(String.format("Lines: %010d", LoadStat.getInstance().getCount()));
+				
+				if (finished) {
+					LoadStat.getInstance().endMeasuringTime();
+					System.out.println("Complete !!");
+					System.out.println("Seconds: " + LoadStat.getInstance().getSecondsTook());
+					System.out.println("TPS: " + (LoadStat.getInstance().getCount() / LoadStat.getInstance().getSecondsTook()));
+					break;
+				}
 				
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {}
 				
+				System.out.println(threadCnt.get() + " threads remaining..");
+
 				if (threadCnt.get() == 0) {
-					System.out.println("Load Complete !!");
-					break;
-				} else {
-					System.out.println(threadCnt.get() + " threads remaining..");
+					finished = true;
 				}
 			}
 		}
