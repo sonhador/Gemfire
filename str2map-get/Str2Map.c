@@ -51,9 +51,9 @@ Datum get(PG_FUNCTION_ARGS) {
 	char *key_part;
 	char *val_part;
 	char *val_part_end;
-	int key_val_pairs_delim_len = strlen(key_val_pairs_delim);
-	int key_len = strlen(key);
-	int key_val_delim_len = strlen(key_val_delim);
+	int key_val_pairs_delim_len 	= strlen(key_val_pairs_delim);
+	int key_len 			= strlen(key);
+	int key_val_delim_len 		= strlen(key_val_delim);
 	char key_delim[key_len + key_val_delim_len + 1];
 	char delim_key_delim[key_val_pairs_delim_len + key_len + key_val_delim_len + 1];
 
