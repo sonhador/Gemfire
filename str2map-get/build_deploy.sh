@@ -2,7 +2,14 @@
 
 rm -f *.o *.so
 
-gcc -I/usr/lib/gphd/hawq/include/postgresql/server/ -L/usr/lib/gphd/hawq/lib/ -fPIC -c Str2Map.c
+HAWQ=/usr/lib/gphd/hawq
+LIB=$HAWQ/lib
+INC=$HAWQ/include
+INC_POSTGRESQL=$INC/postgresql
+INC_SERVER=$INC_POSTGRESQL/server
+INC_INTERNAL=$INC_POSTGRESQL/internal
+
+gcc -I$INC -I$INC_SERVER -I$INC_INTERNAL -L$LIB -fPIC -c Str2Map.c
 
 gcc -shared -o Str2Map.so Str2Map.o
 

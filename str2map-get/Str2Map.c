@@ -23,6 +23,7 @@
  *******************************************************************************/
 
 #include "postgres.h"
+#include "utils/builtins.h"
 #include "fmgr.h"
 #include <string.h>
 #include <stdio.h>
@@ -40,14 +41,12 @@ PG_FUNCTION_INFO_V1(get);
 void free_palloc(char *p);
 void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_delim);
 char *concat(char *dst, int dst_len, char *src, int src_len);
-char *txt2char_p(text *str);
-text *char_p2txt(char *str, int len);
 
 Datum get(PG_FUNCTION_ARGS) {
-	char *body 			= txt2char_p(PG_GETARG_TEXT_P(0));
- 	char *key 			= txt2char_p(PG_GETARG_TEXT_P(1));
-  	char *key_val_pairs_delim 	= txt2char_p(PG_GETARG_TEXT_P(2));
-	char *key_val_delim 		= txt2char_p(PG_GETARG_TEXT_P(3));
+	char *body 			= text_to_cstring(PG_GETARG_TEXT_P(0));
+ 	char *key 			= text_to_cstring(PG_GETARG_TEXT_P(1));
+  	char *key_val_pairs_delim 	= text_to_cstring(PG_GETARG_TEXT_P(2));
+	char *key_val_delim 		= text_to_cstring(PG_GETARG_TEXT_P(3));
 	char *key_part;
 	char *val_part;
 	char *val_part_end;
@@ -88,11 +87,11 @@ Datum get(PG_FUNCTION_ARGS) {
 	val_part_end = strstr(val_part, key_val_pairs_delim);
 
 	text *val;
-	if (!val_part_end) {
-        	val = char_p2txt(val_part, body + strlen(body) - val_part);
-	} else {
-        	val = char_p2txt(val_part, val_part_end - key_val_pairs_delim_len - val_part + 1);
+	if (val_part_end) {
+		val_part[val_part_end - val_part] = 0;
 	}
+
+	val = cstring_to_text(val_part);
 
 	cleanup(body, key, key_val_pairs_delim, key_val_delim);
 
@@ -123,31 +122,4 @@ char *concat(char *dst, int dst_len, char *src, int src_len) {
 	dst[dst_len + src_len] = 0;
 
 	return dst;
-}
-
-char *txt2char_p(text *str) {
-	if (str == TEXT_NULL) {
-		return CHAR_NULL;
-	}
-
-	size_t len = VARSIZE(str) - VARHDRSZ;
-
-	char *char_p = palloc(len + 1);
-	memcpy(char_p, VARDATA(str), len);
-	char_p[len] = 0;
-
-	return char_p;
-}
-
-text *char_p2txt(char *str, int len) {
-	if (len == 0) {
-		return TEXT_NULL;
-	}
-
-	text *txt = (text *)palloc(len + VARHDRSZ);
-
-	SET_VARSIZE(txt, len + VARHDRSZ);
-	memcpy(VARDATA(txt), str, len);
-
-	return txt;
 }
