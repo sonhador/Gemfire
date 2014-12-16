@@ -31,8 +31,7 @@
 PG_MODULE_MAGIC;
 #endif
 
-#define CHAR_NULL (char *)0
-#define TEXT_NULL (text *)0
+#define NULL_CHAR '\0'
 
 Datum get(PG_FUNCTION_ARGS);
 PG_FUNCTION_INFO_V1(get);
@@ -55,10 +54,7 @@ Datum get(PG_FUNCTION_ARGS) {
 	char key_delim[key_len + key_val_delim_len + 1];
 	char delim_key_delim[key_val_pairs_delim_len + key_len + key_val_delim_len + 1];
 
-	if (body 			== CHAR_NULL ||
-		key  			== CHAR_NULL ||
-		key_val_pairs_delim 	== CHAR_NULL ||
-		key_val_delim		== CHAR_NULL ) {
+	if (is_empty(body) || is_empty(key) || is_empty(key_val_pairs_delim) || is_empty(key_val_delim)) {
 		cleanup(body, key, key_val_pairs_delim, key_val_delim);
 		PG_RETURN_NULL();
 	}
@@ -94,7 +90,7 @@ Datum get(PG_FUNCTION_ARGS) {
 
 		val = cstring_to_text_with_len(val_part, val_part_end - val_part);
 	} else {
-		if (val_part == CHAR_NULL) {
+		if (val_part == NULL_CHAR) {
 			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
@@ -107,7 +103,7 @@ Datum get(PG_FUNCTION_ARGS) {
 }
 
 void free_palloc(char *p) {
-	if (p == CHAR_NULL) {
+	if (p == NULL) {
 		return;
 	}
 
@@ -123,7 +119,15 @@ void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_del
 
 char *concat(char *dst, int dst_len, char *src, int src_len) {
 	memcpy(dst + dst_len, src, src_len);
-	dst[dst_len + src_len] = 0;
+	dst[dst_len + src_len] = '\0';
 
 	return dst;
+}
+
+int is_empty(char *p) {
+	if (p == NULL || p == NULL_CHAR) {
+		return 1;
+	}
+
+	return 0;
 }
