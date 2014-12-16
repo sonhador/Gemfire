@@ -119,7 +119,7 @@ void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_del
 
 char *concat(char *dst, int dst_len, char *src, int src_len) {
 	memcpy(dst + dst_len, src, src_len);
-	dst[dst_len + src_len] = '\0';
+	dst[dst_len + src_len] = NULL_CHAR;
 
 	return dst;
 }
