@@ -26,7 +26,6 @@
 #include "utils/builtins.h"
 #include "fmgr.h"
 #include <string.h>
-#include <stdio.h>
 
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
