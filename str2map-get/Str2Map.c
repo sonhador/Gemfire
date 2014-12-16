@@ -71,7 +71,7 @@ Datum get(PG_FUNCTION_ARGS) {
 	if (key_part != body) {
 		key_part = strstr(body, delim_key_delim);
 
-		if (!key_part) {
+		if (key_part == NULL) {
 			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
@@ -83,21 +83,21 @@ Datum get(PG_FUNCTION_ARGS) {
 	val_part_end = strstr(val_part, key_val_pairs_delim);
 
 	text *val;
-	if (val_part_end) {
-		if (val_part_end == val_part) {
-			cleanup(body, key, key_val_pairs_delim, key_val_delim);
-			PG_RETURN_NULL();
-		}
-
-		val = cstring_to_text_with_len(val_part, val_part_end - val_part);
-	} else {
+	if (val_part_end == NULL) {
 		if (val_part == NULL_CHAR) {
 			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
 
 		val = cstring_to_text(val_part);
-	}
+	} else {
+		if (val_part_end == val_part) {
+			cleanup(body, key, key_val_pairs_delim, key_val_delim);
+			PG_RETURN_NULL();
+		}
+
+		val = cstring_to_text_with_len(val_part, val_part_end - val_part);
+	}		
 
 	cleanup(body, key, key_val_pairs_delim, key_val_delim);
 	PG_RETURN_TEXT_P(val);
