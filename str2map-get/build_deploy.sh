@@ -2,7 +2,7 @@
 
 rm -f *.o *.so
 
-FLAGS="-m64 -O3 -ffast-math -march=native -funroll-loops"
+FLAGS="-O2 -m64 -march=native"
 
 HAWQ=/usr/lib/gphd/hawq
 LIB=$HAWQ/lib
