@@ -39,6 +39,7 @@ PG_FUNCTION_INFO_V1(get);
 void free_palloc(char *p);
 void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_delim);
 char *concat(char *dst, int dst_len, char *src, int src_len);
+int is_empty(char *p);
 
 Datum get(PG_FUNCTION_ARGS) {
 	char *body 			= text_to_cstring(PG_GETARG_TEXT_P(0));
