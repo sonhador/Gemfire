@@ -88,18 +88,23 @@ Datum get(PG_FUNCTION_ARGS) {
 
 	text *val;
 	if (val_part_end) {
-		val_part[val_part_end - val_part] = 0;
-	}
+		if (val_part_end == val_part) {
+			cleanup(body, key, key_val_pairs_delim, key_val_delim);
+			PG_RETURN_NULL();
+		}
 
-	val = cstring_to_text(val_part);
+		val = cstring_to_text_with_len(val_part, val_part_end - val_part);
+	} else {
+		if (val_part == (char *)0) {
+			cleanup(body, key, key_val_pairs_delim, key_val_delim);
+			PG_RETURN_NULL();
+		}
+
+		val = cstring_to_text(val_part);
+	}
 
 	cleanup(body, key, key_val_pairs_delim, key_val_delim);
-
-	if (val == TEXT_NULL) {
-		PG_RETURN_NULL();
-	} else {
-		PG_RETURN_TEXT_P(val);
-	}
+	PG_RETURN_TEXT_P(val);
 }
 
 void free_palloc(char *p) {
