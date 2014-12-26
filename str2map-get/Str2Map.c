@@ -36,27 +36,34 @@ PG_MODULE_MAGIC;
 Datum get(PG_FUNCTION_ARGS);
 PG_FUNCTION_INFO_V1(get);
 
-void free_palloc(char *p);
-void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_delim);
 char *concat(char *dst, int dst_len, char *src, int src_len);
 int is_empty(char *p);
+int text_len(text *txt);
+void text_to_char_array(char *dst, text *src, int len);
 
 Datum get(PG_FUNCTION_ARGS) {
-	char *body 			= text_to_cstring(PG_GETARG_TEXT_P(0));
- 	char *key 			= text_to_cstring(PG_GETARG_TEXT_P(1));
-  	char *key_val_pairs_delim 	= text_to_cstring(PG_GETARG_TEXT_P(2));
-	char *key_val_delim 		= text_to_cstring(PG_GETARG_TEXT_P(3));
-	char *key_part;
-	char *val_part;
-	char *val_part_end;
-	int key_val_pairs_delim_len 	= strlen(key_val_pairs_delim);
-	int key_len 			= strlen(key);
-	int key_val_delim_len 		= strlen(key_val_delim);
-	char key_delim[key_len + key_val_delim_len + 1];
-	char delim_key_delim[key_val_pairs_delim_len + key_len + key_val_delim_len + 1];
+	int body_len        = text_len(PG_GETARG_TEXT_P(0));
+    int key_len         = text_len(PG_GETARG_TEXT_P(1));
+    int key_val_pairs_delim_len     = text_len(PG_GETARG_TEXT_P(2));
+    int key_val_delim_len       = text_len(PG_GETARG_TEXT_P(3));
+
+    char body[body_len+1];
+    char key[key_len+1];
+    char key_val_pairs_delim[key_val_pairs_delim_len+1];
+    char key_val_delim[key_val_delim_len+1];
+
+    char *key_part;
+    char *val_part;
+    char *val_part_end;
+    char key_delim[key_len + key_val_delim_len + 1];
+    char delim_key_delim[key_val_pairs_delim_len + key_len + key_val_delim_len + 1];
+
+	text_to_char_array(body, PG_GETARG_TEXT_P(0), body_len);
+	text_to_char_array(key, PG_GETARG_TEXT_P(1), key_len);
+	text_to_char_array(key_val_pairs_delim, PG_GETARG_TEXT_P(2), key_val_pairs_delim_len);
+	text_to_char_array(key_val_delim, PG_GETARG_TEXT_P(3), key_val_delim_len);
 
 	if (is_empty(body) || is_empty(key) || is_empty(key_val_pairs_delim) || is_empty(key_val_delim)) {
-		cleanup(body, key, key_val_pairs_delim, key_val_delim);
 		PG_RETURN_NULL();
 	}
 
@@ -72,7 +79,6 @@ Datum get(PG_FUNCTION_ARGS) {
 		key_part = strstr(body, delim_key_delim);
 
 		if (key_part == NULL) {
-			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
 
@@ -85,37 +91,19 @@ Datum get(PG_FUNCTION_ARGS) {
 	text *val;
 	if (val_part_end == NULL) {
 		if (val_part == NULL_CHAR) {
-			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
 
 		val = cstring_to_text(val_part);
 	} else {
 		if (val_part_end == val_part) {
-			cleanup(body, key, key_val_pairs_delim, key_val_delim);
 			PG_RETURN_NULL();
 		}
 
 		val = cstring_to_text_with_len(val_part, val_part_end - val_part);
 	}		
 
-	cleanup(body, key, key_val_pairs_delim, key_val_delim);
 	PG_RETURN_TEXT_P(val);
-}
-
-void free_palloc(char *p) {
-	if (p == NULL) {
-		return;
-	}
-
-	pfree(p);
-}
-
-void cleanup(char *body, char *key, char *key_val_pairs_delim, char *key_val_delim) {
-	free_palloc(body);
-	free_palloc(key);
-	free_palloc(key_val_pairs_delim);
-	free_palloc(key_val_delim);
 }
 
 char *concat(char *dst, int dst_len, char *src, int src_len) {
@@ -131,4 +119,13 @@ int is_empty(char *p) {
 	}
 
 	return 0;
+}
+
+int text_len(text *txt) {
+    return VARSIZE(txt) - VARHDRSZ;
+}
+
+void text_to_char_array(char *dst, text *src, int len) {
+	memcpy(dst, VARDATA(src), len);
+    dst[len] = '\0';
 }
