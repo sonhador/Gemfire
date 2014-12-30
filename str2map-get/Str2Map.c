@@ -90,7 +90,7 @@ Datum get(PG_FUNCTION_ARGS) {
 
 	text *val;
 	if (val_part_end == NULL) {
-		if (val_part == NULL_CHAR) {
+		if (*val_part == NULL_CHAR) {
 			PG_RETURN_NULL();
 		}
 
@@ -114,7 +114,7 @@ char *concat(char *dst, int dst_len, char *src, int src_len) {
 }
 
 int is_empty(char *p) {
-	if (p == NULL || p == NULL_CHAR) {
+	if (p == NULL || *p == NULL_CHAR) {
 		return 1;
 	}
 
